@@ -8,8 +8,10 @@ from sqlalchemy import text
 
 app = Flask(__name__)
 
+
+
 @app.route('/')
-def index():
+def data():
     # Load environment variables
     load_dotenv()
 
@@ -48,13 +50,12 @@ def index():
                 last_name = fake.last_name()
                 date_of_birth = fake.date_of_birth(minimum_age=10, maximum_age=90)
                 address = fake.address().replace('\n', ', ')
-                phone_number = fake.phone_number()
                 email = fake.email()
                 connection.execute(f"""
                     INSERT INTO demographics (patient_id, first_name, last_name,
-                                    date_of_birth, address, phone_number, email)
+                                    date_of_birth, address, email)
                     VALUES ({patient_id}, '{first_name}', '{last_name}', '{date_of_birth}', 
-                    '{address}', '{phone_number}', '{email}') 
+                    '{address}', '{email}') 
                 """)
 
     if __name__ == "__main__":
