@@ -6,12 +6,7 @@ from sqlalchemy import create_engine
 from faker import Faker
 from sqlalchemy import text
 
-app = Flask(__name__)
-
-
-
-@app.route('/')
-def data():
+#Used this app first to create fake data, data inserted but app doesn't work don't run, run app.py directly
     # Load environment variables
     load_dotenv()
 
@@ -44,29 +39,12 @@ def data():
             # Fetch all patient IDs
             patient_ids = [row[0] for row in connection.execute("SELECT patient_id FROM patients").fetchall()] # Noqa: E501
             
-            # Insert fake data into demographics
-            for patient_id in patient_ids:
-                first_name = fake.first_name()
-                last_name = fake.last_name()
-                date_of_birth = fake.date_of_birth(minimum_age=10, maximum_age=90)
-                address = fake.address().replace('\n', ', ')
-                email = fake.email()
-                connection.execute(f"""
-                    INSERT INTO demographics (patient_id, first_name, last_name,
-                                    date_of_birth, address, email)
-                    VALUES ({patient_id}, '{first_name}', '{last_name}', '{date_of_birth}', 
-                    '{address}', '{email}') 
-                """)
+           
 
     if __name__ == "__main__":
         insert_fake_data(db_engine)
         print("Fake data insertion complete!")
 
-        return render_template('data.html')
+        
 
 
-if __name__ == '__main__':
-    app.run(
-        debug=True,
-        port=5000
-    )
