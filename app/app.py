@@ -3,6 +3,14 @@ from dotenv import load_dotenv
 from pandas import read_sql
 from sqlalchemy import create_engine, inspect
 from flask import Flask, render_template
+import sentry_sdk
+from flask import Flask
+
+sentry_sdk.init(
+    dsn="https://58707ec0c5fe8bb72714b78d07083872@o4506404419338240.ingest.sentry.io/4506404437688320",
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -43,6 +51,11 @@ app = Flask(__name__)
 def index():
        return render_template('index.html')
 
+## create a route that throws an error
+@app.route('/error')
+def error():
+    raise Exception('This is a test error for Sentry Testing')
+
 @app.route('/data')
 def data(data=df):
 
@@ -51,7 +64,15 @@ def data(data=df):
     data = data.sample(15)
     return render_template('data.html', data=data)
 
-
+## create a db connection error 
+@app.route('/db-error')
+def db_error():
+    conn = create_engine(f'mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOSTNAME}/{DB_NAME}')
+    try:
+        conn.connect()
+    except Exception as e:
+        raise Exception(f'Error connecting to the database: {e}')
+    
 if __name__ == '__main__':
     app.run(
         debug=True,
