@@ -3,6 +3,7 @@ python-dotenv
 pandas
 authlib
 requests
-Flask==2.2.2
-gunicorn
 Werkzeug==2.2.2
+sqlalchemy
+sentry_sdk
+pymysql

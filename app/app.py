@@ -7,6 +7,7 @@ import sentry_sdk
 from authlib.integrations.flask_client import OAuth
 from authlib.common.security import generate_token
 from db_functions import update_or_create_user
+import pymysql
 
 sentry_sdk.init(
     dsn="https://58707ec0c5fe8bb72714b78d07083872@o4506404419338240.ingest.sentry.io/4506404437688320",
